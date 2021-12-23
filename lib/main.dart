@@ -19,12 +19,57 @@ class Quizzler extends StatelessWidget {
   }
 }
 
+Expanded getButton({required String type}) {
+  Color color;
+  if (type == 'True') {
+    color = Colors.green;
+  } else {
+    color = Colors.red;
+  }
+
+  return Expanded(
+    child: Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: TextButton(
+        style: TextButton.styleFrom(backgroundColor: color),
+        onPressed: () {
+          // The user clicked
+        },
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 20.0),
+        ),
+      ),
+    ),
+  );
+}
+
+Icon getScoreIcon({required Color color}) {
+  IconData icon;
+  if (color == Colors.green) {
+    icon = Icons.check;
+  } else {
+    icon = Icons.close;
+  }
+  return Icon(
+    icon,
+    color: color,
+  );
+}
+
 class QuizPage extends StatefulWidget {
   @override
   _QuizPageState createState() => _QuizPageState();
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreCard = [
+    getScoreIcon(color: Colors.green),
+    getScoreIcon(color: Colors.red),
+    getScoreIcon(color: Colors.red),
+    getScoreIcon(color: Colors.green)
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,44 +92,12 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.green,
-              child: Text(
-                'True',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
-              ),
-              onPressed: () {
-                //The user picked true.
-              },
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              color: Colors.red,
-              child: Text(
-                'False',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {
-                //The user picked false.
-              },
-            ),
-          ),
-        ),
+        getButton(type: 'True'),
+        getButton(type: 'False'),
         //TODO: Add a Row here as your score keeper
+        Row(
+          children: scoreCard,
+        )
       ],
     );
   }
