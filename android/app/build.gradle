@@ -43,6 +43,13 @@ android {
         release {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            manifestPlaceholders = [applicationName: "android.app.Application"]
+        }
+        debug {
+            manifestPlaceholders = [applicationName: "android.app.Application"]
+        }
+        build{
+            manifestPlaceholders = [applicationName: "android.app.Application"]
         }
     }
 }
