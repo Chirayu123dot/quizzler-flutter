@@ -19,31 +19,6 @@ class Quizzler extends StatelessWidget {
   }
 }
 
-Expanded getButton({required String type}) {
-  Color color;
-  if (type == 'True') {
-    color = Colors.green;
-  } else {
-    color = Colors.red;
-  }
-
-  return Expanded(
-    child: Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextButton(
-        style: TextButton.styleFrom(backgroundColor: color),
-        onPressed: () {
-          // The user clicked
-        },
-        child: Text(
-          type,
-          style: TextStyle(color: Colors.white, fontSize: 20.0),
-        ),
-      ),
-    ),
-  );
-}
-
 Icon getScoreIcon({required Color color}) {
   IconData icon;
   if (color == Colors.green) {
@@ -63,12 +38,55 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scoreCard = [
-    getScoreIcon(color: Colors.green),
-    getScoreIcon(color: Colors.red),
-    getScoreIcon(color: Colors.red),
-    getScoreIcon(color: Colors.green)
+  List<Icon> scoreCard = [];
+  List<String> question = [
+    'You can lead a cow down stairs but not up stairs.',
+    'Approximately one quarter of human bones are in the feet.',
+    'A slug\'s blood is green.',
   ];
+
+  List<bool> answer = [false, true, true];
+
+  int questionNumber = 0;
+
+  Expanded getButton({required String type}) {
+    Color color;
+    if (type == 'True') {
+      color = Colors.green;
+    } else {
+      color = Colors.red;
+    }
+
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: TextButton(
+          style: TextButton.styleFrom(backgroundColor: color),
+          onPressed: () {
+            // The user clicked
+            setState(() {
+              if (type == 'True') {
+                // user clicked on 'True' button
+                answer[questionNumber]
+                    ? scoreCard.add(getScoreIcon(color: Colors.green))
+                    : scoreCard.add(getScoreIcon(color: Colors.red));
+              } else {
+                // user clicked on 'False' button
+                answer[questionNumber]
+                    ? scoreCard.add(getScoreIcon(color: Colors.red))
+                    : scoreCard.add(getScoreIcon(color: Colors.green));
+              }
+              questionNumber = (questionNumber + 1) % 3;
+            });
+          },
+          child: Text(
+            type,
+            style: TextStyle(color: Colors.white, fontSize: 20.0),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +100,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                question[questionNumber],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -94,7 +112,6 @@ class _QuizPageState extends State<QuizPage> {
         ),
         getButton(type: 'True'),
         getButton(type: 'False'),
-        //TODO: Add a Row here as your score keeper
         Row(
           children: scoreCard,
         )
