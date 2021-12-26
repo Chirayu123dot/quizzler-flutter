@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quizzler/question.dart';
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
 
@@ -41,14 +43,6 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreCard = [];
 
-  List<Question> questionBank = [
-    Question('You can lead a cow down stairs but not up stairs.', false),
-    Question('Approximately one quarter of human bones are in the feet.', true),
-    Question('A slug\'s blood is green.', true),
-  ];
-
-  int questionNumber = 0;
-
   Expanded getButton({required String type}) {
     Color color;
     if (type == 'True') {
@@ -68,16 +62,16 @@ class _QuizPageState extends State<QuizPage> {
             setState(() {
               if (type == 'True') {
                 // user clicked on 'True' button
-                questionBank[questionNumber].questionAnswer
+                quizBrain.questionBank[quizBrain.questionNumber].questionAnswer
                     ? scoreCard.add(getScoreIcon(color: Colors.green))
                     : scoreCard.add(getScoreIcon(color: Colors.red));
               } else {
                 // user clicked on 'False' button
-                questionBank[questionNumber].questionAnswer
+                quizBrain.questionBank[quizBrain.questionNumber].questionAnswer
                     ? scoreCard.add(getScoreIcon(color: Colors.red))
                     : scoreCard.add(getScoreIcon(color: Colors.green));
               }
-              questionNumber = (questionNumber + 1) % 3;
+              quizBrain.questionNumber = quizBrain.questionNumber + 1;
             });
           },
           child: Text(
@@ -101,7 +95,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[questionNumber].questionText,
+                quizBrain.questionBank[quizBrain.questionNumber].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
