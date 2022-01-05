@@ -3,6 +3,7 @@ import 'question.dart';
 class QuizBrain {
   int _questionNumber = 0;
   int _score = 0;
+  bool quizFinishedAlertDisplayed = false;
 
   List<Question> _questionBank = [
     Question('Some cats are actually allergic to humans', true),
@@ -65,5 +66,6 @@ class QuizBrain {
   void resetQuiz() {
     _questionNumber = 0;
     _score = 0;
+    quizFinishedAlertDisplayed = false;
   }
 }

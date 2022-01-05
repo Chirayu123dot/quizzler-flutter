@@ -58,6 +58,8 @@ class _QuizPageState extends State<QuizPage> {
       isCloseButton: false,
     );
 
+    quizBrain.quizFinishedAlertDisplayed = true;
+
     return Alert(
       context: context,
       style: alertStyle,
@@ -98,16 +100,18 @@ class _QuizPageState extends State<QuizPage> {
           onPressed: () {
             // The user has clicked on a button
             setState(() {
-              if (type == 'True') {
-                // user clicked on 'True' button
-                quizBrain.getQuestionAnswer()
-                    ? isAnswerCorrect(true)
-                    : isAnswerCorrect(false);
-              } else {
-                // user clicked on 'False' button
-                quizBrain.getQuestionAnswer()
-                    ? isAnswerCorrect(false)
-                    : isAnswerCorrect(true);
+              if (!quizBrain.quizFinishedAlertDisplayed) {
+                if (type == 'True') {
+                  // user clicked on 'True' button
+                  quizBrain.getQuestionAnswer()
+                      ? isAnswerCorrect(true)
+                      : isAnswerCorrect(false);
+                } else {
+                  // user clicked on 'False' button
+                  quizBrain.getQuestionAnswer()
+                      ? isAnswerCorrect(false)
+                      : isAnswerCorrect(true);
+                }
               }
 
               // Check whether the quiz has ended or not
