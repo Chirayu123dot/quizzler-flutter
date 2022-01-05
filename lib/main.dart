@@ -23,19 +23,6 @@ class Quizzler extends StatelessWidget {
   }
 }
 
-Icon getScoreIcon({required Color color}) {
-  IconData icon;
-  if (color == Colors.green) {
-    icon = Icons.check;
-  } else {
-    icon = Icons.close;
-  }
-  return Icon(
-    icon,
-    color: color,
-  );
-}
-
 class QuizPage extends StatefulWidget {
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -43,6 +30,19 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreCard = [];
+
+  Icon getScoreIcon({required Color color}) {
+    IconData icon;
+    if (color == Colors.green) {
+      icon = Icons.check;
+    } else {
+      icon = Icons.close;
+    }
+    return Icon(
+      icon,
+      color: color,
+    );
+  }
 
   void isAnswerCorrect(bool val) {
     if (val) {
