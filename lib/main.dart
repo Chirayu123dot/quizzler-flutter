@@ -44,6 +44,35 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreCard = [];
 
+  Alert getAlertDialog(BuildContext context) {
+    var alertStyle = AlertStyle(
+      isCloseButton: false,
+    );
+
+    return Alert(
+      context: context,
+      style: alertStyle,
+      type: AlertType.success,
+      title: 'Finished!',
+      desc: 'You\'ve reached the end of the quiz',
+      buttons: [
+        DialogButton(
+          child: Text(
+            'RESET',
+            style: TextStyle(color: Colors.white, fontSize: 16.0),
+          ),
+          onPressed: () {
+            setState(() {
+              scoreCard.clear();
+              quizBrain.resetQuiz();
+              Navigator.pop(context);
+            });
+          },
+        )
+      ],
+    );
+  }
+
   Expanded getButton({required String type, required BuildContext context}) {
     Color color;
     if (type == 'True') {
@@ -51,10 +80,6 @@ class _QuizPageState extends State<QuizPage> {
     } else {
       color = Colors.red;
     }
-
-    var alertStyle = AlertStyle(
-      isCloseButton: false,
-    );
 
     return Expanded(
       flex: 2,
@@ -80,31 +105,7 @@ class _QuizPageState extends State<QuizPage> {
               // Check whether the quiz has ended or not
               if (quizBrain.quizFinished()) {
                 // Display alert dialog
-                Alert(
-                  context: context,
-                  style: alertStyle,
-                  type: AlertType.success,
-                  title: 'Finished!',
-                  desc: 'You\'ve reached the end of the quiz',
-                  buttons: [
-                    DialogButton(
-                      child: Text(
-                        'RESET',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          scoreCard.clear();
-                          quizBrain.resetQuiz();
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                  ],
-                ).show();
+                getAlertDialog(context).show();
               } else {
                 // Quiz has not ended
                 // Move to the next question
