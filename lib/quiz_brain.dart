@@ -2,6 +2,7 @@ import 'question.dart';
 
 class QuizBrain {
   int _questionNumber = 0;
+  int _score = 0;
 
   List<Question> _questionBank = [
     Question('Some cats are actually allergic to humans', true),
@@ -32,11 +33,6 @@ class QuizBrain {
   ];
 
   void nextQuestion() {
-    // if (_questionNumber < _questionBank.length - 1) {
-    //   _questionNumber++;
-    // } else {
-    //   _questionsFinished = true;
-    // }
     _questionNumber++;
     print('questionNumber = $_questionNumber');
   }
@@ -54,7 +50,20 @@ class QuizBrain {
     return _questionBank[_questionNumber].questionAnswer;
   }
 
+  void increaseScore() {
+    _score++;
+  }
+
+  int getTotalScore() {
+    return _questionBank.length;
+  }
+
+  int getScore() {
+    return _score;
+  }
+
   void resetQuiz() {
     _questionNumber = 0;
+    _score = 0;
   }
 }

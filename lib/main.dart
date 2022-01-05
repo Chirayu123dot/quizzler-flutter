@@ -44,6 +44,15 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreCard = [];
 
+  void isAnswerCorrect(bool val) {
+    if (val) {
+      scoreCard.add(getScoreIcon(color: Colors.green));
+      quizBrain.increaseScore();
+    } else {
+      scoreCard.add(getScoreIcon(color: Colors.red));
+    }
+  }
+
   Alert getAlertDialog(BuildContext context) {
     var alertStyle = AlertStyle(
       isCloseButton: false,
@@ -52,9 +61,8 @@ class _QuizPageState extends State<QuizPage> {
     return Alert(
       context: context,
       style: alertStyle,
-      type: AlertType.success,
-      title: 'Finished!',
-      desc: 'You\'ve reached the end of the quiz',
+      title: '${quizBrain.getScore()}/${quizBrain.getTotalScore()}',
+      desc: 'Quiz Finished!',
       buttons: [
         DialogButton(
           child: Text(
@@ -93,13 +101,13 @@ class _QuizPageState extends State<QuizPage> {
               if (type == 'True') {
                 // user clicked on 'True' button
                 quizBrain.getQuestionAnswer()
-                    ? scoreCard.add(getScoreIcon(color: Colors.green))
-                    : scoreCard.add(getScoreIcon(color: Colors.red));
+                    ? isAnswerCorrect(true)
+                    : isAnswerCorrect(false);
               } else {
                 // user clicked on 'False' button
                 quizBrain.getQuestionAnswer()
-                    ? scoreCard.add(getScoreIcon(color: Colors.red))
-                    : scoreCard.add(getScoreIcon(color: Colors.green));
+                    ? isAnswerCorrect(false)
+                    : isAnswerCorrect(true);
               }
 
               // Check whether the quiz has ended or not
