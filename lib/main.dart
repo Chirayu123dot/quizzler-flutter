@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -43,13 +44,17 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreCard = [];
 
-  Expanded getButton({required String type}) {
+  Expanded getButton({required String type, required BuildContext context}) {
     Color color;
     if (type == 'True') {
       color = Colors.green;
     } else {
       color = Colors.red;
     }
+
+    var alertStyle = AlertStyle(
+      isCloseButton: false,
+    );
 
     return Expanded(
       flex: 2,
@@ -58,20 +63,53 @@ class _QuizPageState extends State<QuizPage> {
         child: TextButton(
           style: TextButton.styleFrom(backgroundColor: color),
           onPressed: () {
-            // The user clicked
+            // The user has clicked on a button
             setState(() {
               if (type == 'True') {
                 // user clicked on 'True' button
-                quizBrain.questionBank[quizBrain.questionNumber].questionAnswer
+                quizBrain.getQuestionAnswer()
                     ? scoreCard.add(getScoreIcon(color: Colors.green))
                     : scoreCard.add(getScoreIcon(color: Colors.red));
               } else {
                 // user clicked on 'False' button
-                quizBrain.questionBank[quizBrain.questionNumber].questionAnswer
+                quizBrain.getQuestionAnswer()
                     ? scoreCard.add(getScoreIcon(color: Colors.red))
                     : scoreCard.add(getScoreIcon(color: Colors.green));
               }
-              quizBrain.questionNumber = quizBrain.questionNumber + 1;
+
+              // Check whether the quiz has ended or not
+              if (quizBrain.quizFinished()) {
+                // Display alert dialog
+                Alert(
+                  context: context,
+                  style: alertStyle,
+                  type: AlertType.success,
+                  title: 'Finished!',
+                  desc: 'You\'ve reached the end of the quiz',
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        'RESET',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          scoreCard.clear();
+                          quizBrain.resetQuiz();
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                  ],
+                ).show();
+              } else {
+                // Quiz has not ended
+                // Move to the next question
+                quizBrain.nextQuestion();
+              }
             });
           },
           child: Text(
@@ -95,7 +133,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.questionBank[quizBrain.questionNumber].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -105,8 +143,8 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
-        getButton(type: 'True'),
-        getButton(type: 'False'),
+        getButton(type: 'True', context: context),
+        getButton(type: 'False', context: context),
         Padding(
           padding: const EdgeInsets.only(bottom: 6.0),
           child: SizedBox(
